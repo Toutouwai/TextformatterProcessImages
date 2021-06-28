@@ -1,0 +1,59 @@
+<?php namespace ProcessWire;
+
+class TextformatterProcessImages extends Textformatter {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Process Images',
+			'summary' => 'A Textformatter that processes <img> tags within rich text content.',
+			'version' => '0.1.0',
+			'author' => 'Robin Sallis',
+			'href' => 'https://github.com/Toutouwai/TextformatterProcessImages',
+			'icon' => 'picture-o',
+			'requires' => 'ProcessWire>=3.0.0, PHP>=5.4.0',
+		);
+	}
+
+	/**
+	 * Format string
+	 *
+	 * @param Page $page
+	 * @param Field $field
+	 * @param string $value
+	 */
+	public function formatValue(Page $page, Field $field, &$value) {
+
+		// Return early when possible
+		if(strpos($value, '<img ') === false) return;
+
+		// Parse the HTML
+		if(!function_exists('str_get_html')) {
+			require __DIR__ . '/simple_html_dom/simple_html_dom.php';
+		}
+		/** @var \simple_html_dom $html */
+		$html = str_get_html($value);
+
+		// Loop over images
+		foreach($html->find('img') as $img) {
+			$pageimage = $page->filesManager->getFile($img->src);
+			// Process the Simple HTML DOM node through the hookable processImg() method
+			$img = $this->processImg($img, $pageimage, $page, $field);
+		}
+
+		// Set the modified HTML
+		$value = (string) $html;
+	}
+
+	/**
+	 * A hookable method that processes each <img> tag (as a Simple HTML DOM node)
+	 *
+	 * @param \simple_html_dom_node $img
+	 * @param Pageimage|null $pageimage
+	 * @param Page $page
+	 * @param Field $field
+	 */
+	protected function ___processImg($img, $pageimage, $page, $field) {
+		return $img;
+	}
+
+}
