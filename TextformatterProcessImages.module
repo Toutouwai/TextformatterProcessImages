@@ -51,6 +51,7 @@ class TextformatterProcessImages extends Textformatter {
 	 * @param Pageimage|null $pageimage
 	 * @param Page $page
 	 * @param Field $field
+	 * @return \simple_html_dom_node
 	 */
 	protected function ___processImg($img, $pageimage, $page, $field) {
 		return $img;
