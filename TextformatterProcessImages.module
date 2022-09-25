@@ -6,7 +6,7 @@ class TextformatterProcessImages extends Textformatter {
 		return array(
 			'title' => 'Process Images',
 			'summary' => 'A Textformatter that processes <img> tags within rich text content.',
-			'version' => '0.1.0',
+			'version' => '0.1.1',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/TextformatterProcessImages',
 			'icon' => 'picture-o',
@@ -31,7 +31,8 @@ class TextformatterProcessImages extends Textformatter {
 			require __DIR__ . '/simple_html_dom/simple_html_dom.php';
 		}
 		/** @var \simple_html_dom $html */
-		$html = str_get_html($value);
+		// Including the first five arguments because argument five (strip line breaks) should be false
+		$html = str_get_html($value, true, true, DEFAULT_TARGET_CHARSET, false);
 
 		// Loop over images
 		foreach($html->find('img') as $img) {
